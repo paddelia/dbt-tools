@@ -1,0 +1,31 @@
+
+version: 2
+
+models:
+    - name: calendar
+      description: '{{ doc("calendar") }}'
+      meta:
+        owner: "Philippe Addelia"
+        model_maturity: in dev  
+        Creation_date: July 25 2022
+      columns:
+          - name: Day_date
+            description: "The primary key for this table"
+            tests:
+                - unique
+                - not_null
+
+    - name: constants
+      description: '{{ doc("constants") }}'
+      +tags:
+        - "daily"
+      columns:
+          - name: id_date
+            description: "The primary key for this table"
+            tests:
+                - unique
+                - not_null
+    - name: constants_pivoted
+      description: This view is a easy read pivoted version of the constants table, use this view only to visualize the constants data. Constants uses Calendar uses dbt_utils.unpivot
+      +tags:
+        - "daily"
