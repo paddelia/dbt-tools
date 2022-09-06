@@ -61,9 +61,8 @@ all_periods as (
 CalendarPart1 as (
 
     select cast(p.Date_Day as date) Day_Date
-,   CAST( TO_VARCHAR(date_{{datepart}},'YYYYMMDD') AS int) AS ID_date
+,   CAST( TO_VARCHAR(date_{{datepart}},'YYYYMMDD') AS int) AS IDdate
 , to_Date(TO_VARCHAR( date_{{datepart}},'MM/DD/YYYY')) AS FullDate
-, TO_VARCHAR( date_{{datepart}},'YYYY-MM-DDTHH24:MI:SS:FF3') AS DateName
 ,  CAST( CAST( DATE_PART(yy, date_{{datepart}}) as CHAR(4)) + CAST( DATE_PART(quarter, date_{{datepart}}) AS CHAR(1)) AS INT)  AS YearQuarter
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 6) AS int) AS YearMonth
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 6) 

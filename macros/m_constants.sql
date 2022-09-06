@@ -10,7 +10,7 @@
  {% endset %}
 
 
-{% set v_MonthWhenToResetHistory %} 2 {% endset %} --- Important will control when the procedure remove the first year and fill the new year, will have to change back to 1 in march
+{% set v_MonthWhenToResetHistory %} 2 {% endset %} --- Complication: this will control when the procedure remove the first year and fill the new year, will have to change back to 1 in march
 
 Select 
 Case when DATE_PART(mm, {{v_d}}::date) <= {{v_MonthWhenToResetHistory}} Then
