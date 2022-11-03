@@ -63,10 +63,11 @@ CalendarPart1 as (
     select cast(p.Date_Day as date) Day_Date
 ,   CAST( TO_VARCHAR(date_{{datepart}},'YYYYMMDD') AS int) AS IDdate
 , to_Date(TO_VARCHAR( date_{{datepart}},'MM/DD/YYYY')) AS FullDate
+, CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 4) AS int) AS Year
 ,  CAST( CAST( DATE_PART(yy, date_{{datepart}}) as CHAR(4)) + CAST( DATE_PART(quarter, date_{{datepart}}) AS CHAR(1)) AS INT)  AS YearQuarter
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 6) AS int) AS YearMonth
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 6) 
-    || RIGHT('00' + CAST( DATE_PART(wk, date_{{datepart}}) AS varchar(2)), 2) AS int) AS YearWeek
+    || RIGHT('00' + CAST( DATE_PART(wk, date_{{datepart}}) AS varchar(2)), 2) AS int) AS YearWeek -- BUG will not stuff the week
 
 /* the following is not correct 
 ,  CAST( CAST( DATE_PART(yy, date_{{datepart}}) AS char(4)) 
@@ -117,7 +118,10 @@ CalendarPart1 as (
 , CAST( CASE WHEN DATE_PART(mm, date_{{datepart}}) < 7 THEN 1 ELSE 2 END AS int) AS FiscalSemester
 , CAST( DATE_PART(yy, date_{{datepart}}) AS int) AS FiscalYear 
 , datediff(day, trunc(to_date(date_{{datepart}}), 'MONTH') , last_day(date_{{datepart}})) +1 AS DaysInMonth
+, trunc(to_date(date_{{datepart}}), 'week') as FirstOfWeek
+, last_day(to_date(date_{{datepart}}), 'week') as LastOfWeek
 , trunc(to_date(date_{{datepart}}), 'MONTH') as FirstOfMonth
+, last_day(to_date(date_{{datepart}}), 'MONTH') as LastOfMonth
 , trunc(to_date(date_{{datepart}}), 'year') as FirstOfYear
 , trunc(dateadd(week, -1, date_{{datepart}}), 'week')  as MinDateOfWeekMinus1  --- check this
 ---, trunc( date_{{datepart}}, 'week')  as MinDateOfWeekMinus1_2
