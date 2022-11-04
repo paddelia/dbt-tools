@@ -152,10 +152,15 @@ CASE
     THEN 1              -- Columbus Day (second Monday in October)
   WHEN (MonthName = 'November' AND dayOfMonth = 11)
     THEN 1            -- Veterans' Day (November 11th)
-  WHEN (WeekOfYear = 48 AND MonthName = 'November' AND DayOfWeekName = 'Thursday')
-    THEN 1          -- Thanksgiving Day (fourth Thursday in November)
-  WHEN (WeekOfYear = 48 AND MonthName = 'November' AND DayOfWeekName = 'Friday')
-    THEN 1              -- Black Friday (Friday after thanksgiving in November)     
+  WHEN (fulldate = 
+      CAST(concat(d.YEAR,'-', 11,'-', 29) AS date) 
+      - CAST( DATE_PART(dw, CAST(concat(d.YEAR,'-', 11,'-', 4) AS date)) AS int)
+  ) THEN 1 -- Thanksgiving Day (fourth Thursday in November)
+
+    WHEN (fulldate = 
+      CAST(concat(d.YEAR,'-', 11,'-', 29) AS date) 
+      - CAST( DATE_PART(dw, CAST(concat(d.YEAR,'-', 11,'-', 3) AS date)) AS int)
+  ) THEN 1 -- BlackFriday Day after thanksgiving
   WHEN (MonthName = 'December' AND dayOfMonth = 25)
     THEN 1 Else 0
   END as  IsHoliday 
@@ -176,10 +181,14 @@ CASE
     THEN 'Columbus Day'              -- Columbus Day (second Monday in October)
   WHEN (MonthName = 'November' AND dayOfMonth = 11)
     THEN 'Veterans'' Day'            -- Veterans' Day (November 11th)
-  WHEN (WeekOfYear = 48 AND MonthName = 'November' AND DayOfWeekName = 'Thursday')
-    THEN 'Thanksgiving Day'          -- Thanksgiving Day (fourth Thursday in November)
-   WHEN (WeekOfYear = 48 AND MonthName = 'November' AND DayOfWeekName = 'Friday')
-    THEN 'Black Friday'              -- Black Friday (Friday after thanksgiving in November)   
+  WHEN (fulldate = 
+      CAST(concat(d.YEAR,'-', 11,'-', 29) AS date) 
+      - CAST( DATE_PART(dw, CAST(concat(d.YEAR,'-', 11,'-', 4) AS date)) AS int)
+  ) THEN  'Thanksgiving Day'  -- Thanksgiving Day (fourth Thursday in November)
+    WHEN (fulldate = 
+      CAST(concat(d.YEAR,'-', 11,'-', 29) AS date) 
+      - CAST( DATE_PART(dw, CAST(concat(d.YEAR,'-', 11,'-', 3) AS date)) AS int)
+  ) THEN  'Black Friday'  -- BlackFriday Day after thanksgiving
   WHEN (MonthName = 'December' AND dayOfMonth = 25)
     THEN 'Christmas Day'
   END as HolidayText
