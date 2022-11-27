@@ -5,7 +5,7 @@
 {% macro default__get_intervals_between(start_date, end_date, datepart) -%}
     {%- call statement('get_intervals_between', fetch_result=True) %}
 
-        select {{dbt_utils.datediff(start_date, end_date, datepart)}}
+        select {{datediff(start_date, end_date, datepart)}}
 
     {%- endcall -%}
 
@@ -47,7 +47,7 @@ all_periods as (
 
     select (
         {{
-            dbt_utils.dateadd(
+            dateadd(
                 datepart,
                 "row_number() over (order by 1) - 1",
                 start_date
@@ -66,8 +66,10 @@ CalendarPart1 as (
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 4) AS int) AS Year
 ,  CAST( CAST( DATE_PART(yy, date_{{datepart}}) as CHAR(4)) + CAST( DATE_PART(quarter, date_{{datepart}}) AS CHAR(1)) AS INT)  AS YearQuarter
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 6) AS int) AS YearMonth
+
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 6) 
-    || RIGHT('00' + CAST( DATE_PART(wk, date_{{datepart}}) AS varchar(2)), 2) AS int) AS YearWeek -- BUG will not stuff the week
+    || lpad(CAST( DATE_PART(wk, date_{{datepart}}) AS varchar(2)), 2, 0) 
+    AS int) AS YearWeek -- BUG will not stuff the week
 
 /* the following is not correct 
 ,  CAST( CAST( DATE_PART(yy, date_{{datepart}}) AS char(4)) 
