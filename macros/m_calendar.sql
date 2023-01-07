@@ -64,7 +64,7 @@ CalendarPart1 as (
 ,   CAST( TO_VARCHAR(date_{{datepart}},'YYYYMMDD') AS int) AS IDdate
 , to_Date(TO_VARCHAR( date_{{datepart}},'MM/DD/YYYY')) AS FullDate
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 4) AS int) AS Year
-,  CAST( CAST( DATE_PART(yy, date_{{datepart}}) as CHAR(4)) + CAST( DATE_PART(quarter, date_{{datepart}}) AS CHAR(1)) AS INT)  AS YearQuarter
+,  CAST( CAST( DATE_PART(yy, date_{{datepart}}) as CHAR(4)) || CAST( DATE_PART(quarter, date_{{datepart}}) AS CHAR(1))  AS INT)  AS YearQuarter
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 6) AS int) AS YearMonth
 
 , CAST( LEFT(TO_VARCHAR( date_{{datepart}},'YYYYMMDD'), 6) 
